@@ -12,7 +12,6 @@ const I18N = {
     closeSettings: 'Закрыть настройки',
     lettersPlaceholder: 'ваши буквы',
     maskPlaceholder: 'маска (_ и *)',
-    emptyPrompt: 'Введите буквы, чтобы увидеть список слов.',
     definitionRu: 'Определение: открытый русский словарь (wordlist-формат).',
     definitionEn: 'Definition: open English dictionary (wordlist format).'
   },
@@ -24,7 +23,6 @@ const I18N = {
     closeSettings: 'Close settings',
     lettersPlaceholder: 'your letters',
     maskPlaceholder: 'mask (_ and *)',
-    emptyPrompt: 'Enter letters to see the word list.',
     definitionRu: 'Определение: открытый русский словарь (wordlist-формат).',
     definitionEn: 'Definition: open English dictionary (wordlist format).'
   }
@@ -44,8 +42,7 @@ const els = {
   letters: document.getElementById('letters'),
   mask: document.getElementById('mask'),
   lengthFilters: document.getElementById('lengthFilters'),
-  results: document.getElementById('results'),
-  summary: document.getElementById('summary')
+  results: document.getElementById('results')
 };
 
 function normalize(v, lang) {
@@ -155,17 +152,12 @@ function renderLengthFilters(lengths) {
 }
 
 function renderResults() {
-  const t = I18N[state.language];
   const letters = normalize(state.letters, state.language).replace(/[_*]/g, '');
-
   if (!letters) {
-    els.summary.textContent = t.emptyPrompt;
-    els.summary.classList.remove('hidden');
     els.results.innerHTML = '';
     return;
   }
 
-  els.summary.classList.add('hidden');
   els.results.innerHTML = state.results.slice(0, 300).map((entry) => `<li class="result-item">${entry.word}</li>`).join('');
 }
 
