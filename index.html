@@ -2,18 +2,20 @@
 <html lang="ru">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
     <title>Scrabble Helper (RU/EN)</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <aside id="settingsDrawer" class="drawer" aria-hidden="true">
       <div class="drawer__header">
-        <h2>Настройки</h2>
+        <h2 id="settingsTitle">Настройки</h2>
         <button id="settingsClose" class="drawer__close" type="button" aria-label="Закрыть настройки">✕</button>
       </div>
       <div class="row">
-        <label for="language">Язык словаря</label>
+        <label for="language" id="languageLabel">Язык словаря</label>
         <select id="language">
           <option value="ru">Русский</option>
           <option value="en">English</option>
@@ -27,30 +29,25 @@
         <button id="settingsToggle" class="hamburger" type="button" aria-label="Открыть настройки" aria-expanded="false" aria-controls="settingsDrawer">
           <span></span><span></span><span></span>
         </button>
-        <h1>Scrabble / Эрудит Helper</h1>
-        <p>Мобильная офлайн-версия. На десктопе отображается в узком формате.</p>
+        <h1 id="appTitle">помощник эрудита</h1>
       </header>
 
       <section class="panel">
         <div class="row">
-          <label for="letters">Буквы (ваш набор)</label>
-          <input id="letters" type="text" placeholder="например, комикс" autocomplete="off" />
+          <input id="letters" type="text" placeholder="ваши буквы" autocomplete="off" />
         </div>
 
         <div class="row">
-          <label for="mask">Маска ( _ = 1 любая, * = любое кол-во )</label>
-          <input id="mask" type="text" placeholder="например, _о__кс или _ом*" autocomplete="off" />
+          <input id="mask" type="text" placeholder="маска (_ и *)" autocomplete="off" />
         </div>
       </section>
 
       <section class="panel">
-        <h2>Фильтр по длине</h2>
         <div id="lengthFilters" class="length-filters" aria-label="Фильтр по длине слова"></div>
       </section>
 
       <section class="panel">
-        <h2>Результаты</h2>
-        <p id="summary" class="summary">Загрузка словарей…</p>
+        <p id="summary" class="summary">Введите буквы, чтобы увидеть список слов.</p>
         <ul id="results" class="results"></ul>
       </section>
     </main>
