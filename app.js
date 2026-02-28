@@ -15,7 +15,6 @@ const I18N = {
     showScoresLabel: 'Показывать очки у слова',
     emptyHint: 'Введите буквы и (при желании) маску, чтобы получить список слов.',
     noResults: 'По этим буквам и маске слов не найдено. Попробуйте изменить запрос.',
-    scoreLabel: 'Очки',
     definitionRu: 'Определение: открытый русский словарь (wordlist-формат).',
     definitionEn: 'Definition: open English dictionary (wordlist format).'
   },
@@ -30,7 +29,6 @@ const I18N = {
     showScoresLabel: 'Show word score',
     emptyHint: 'Enter letters and an optional mask to see matching words.',
     noResults: 'No words were found for this set of letters and mask. Try another query.',
-    scoreLabel: 'Score',
     definitionRu: 'Определение: открытый русский словарь (wordlist-формат).',
     definitionEn: 'Definition: open English dictionary (wordlist format).'
   }
@@ -195,14 +193,14 @@ function renderResults() {
   els.results.innerHTML = state.results
     .slice(0, 300)
     .map((entry, index) => {
-      const score = els.showScores.checked ? `<span class="result-score">${entry.score}</span>` : '';
+      const score = els.showScores.checked ? `<sup class="result-score">${entry.score}</sup>` : '';
       return `<li class="result-item" data-index="${index}">
         <button class="result-toggle" type="button" aria-expanded="false">
-          <span class="result-word">${entry.word}</span>
-          ${score}
+          <span class="result-main">
+            <span class="result-word">${entry.word}</span>${score}
+          </span>
         </button>
         <div class="result-details hidden">
-          ${els.showScores.checked ? `<p><strong>${t.scoreLabel}:</strong> ${entry.score}</p>` : ''}
           <p>${entry.definition}</p>
         </div>
       </li>`;
