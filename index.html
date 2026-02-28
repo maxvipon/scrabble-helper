@@ -21,6 +21,12 @@
           <option value="en">English</option>
         </select>
       </div>
+      <div class="row row--compact">
+        <label class="checkbox" for="showScores">
+          <input id="showScores" type="checkbox" checked />
+          <span id="showScoresLabel">Показывать очки у слова</span>
+        </label>
+      </div>
     </aside>
     <div id="drawerBackdrop" class="backdrop hidden" aria-hidden="true"></div>
 
@@ -32,7 +38,7 @@
         <h1 id="appTitle">помощник эрудита</h1>
       </header>
 
-      <section class="panel">
+      <section class="input-panel">
         <div class="row">
           <input id="letters" type="text" placeholder="ваши буквы" autocomplete="off" />
         </div>
@@ -42,11 +48,12 @@
         </div>
       </section>
 
-      <section class="panel">
+      <section id="lengthFiltersPanel" class="length-filters-panel hidden">
         <div id="lengthFilters" class="length-filters" aria-label="Фильтр по длине слова"></div>
       </section>
 
       <section class="results-panel">
+        <div id="emptyState" class="empty-state hidden"></div>
         <ul id="results" class="results"></ul>
       </section>
     </main>

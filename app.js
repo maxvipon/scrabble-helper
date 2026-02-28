@@ -12,6 +12,9 @@ const I18N = {
     closeSettings: 'Закрыть настройки',
     lettersPlaceholder: 'ваши буквы',
     maskPlaceholder: 'маска (_ и *)',
+    showScoresLabel: 'Показывать очки у слова',
+    emptyHint: 'Введите буквы и (при желании) маску, чтобы получить список слов.',
+    noResults: 'По этим буквам и маске слов не найдено. Попробуйте изменить запрос.',
     definitionRu: 'Определение: открытый русский словарь (wordlist-формат).',
     definitionEn: 'Definition: open English dictionary (wordlist format).'
   },
@@ -23,12 +26,15 @@ const I18N = {
     closeSettings: 'Close settings',
     lettersPlaceholder: 'your letters',
     maskPlaceholder: 'mask (_ and *)',
+    showScoresLabel: 'Show word score',
+    emptyHint: 'Enter letters and an optional mask to see matching words.',
+    noResults: 'No words were found for this set of letters and mask. Try another query.',
     definitionRu: 'Определение: открытый русский словарь (wordlist-формат).',
     definitionEn: 'Definition: open English dictionary (wordlist format).'
   }
 };
 
-const state = { language: 'ru', letters: '', mask: '', lengthFilter: null, dictionary: { ru: [], en: [] }, results: [] };
+const state = { language: 'ru', letters: '', mask: '', lengthFilter: null, dictionary: { ru: [], en: [] }, results: [], showScores: true };
 
 const els = {
   settingsToggle: document.getElementById('settingsToggle'),
@@ -39,9 +45,13 @@ const els = {
   languageLabel: document.getElementById('languageLabel'),
   appTitle: document.getElementById('appTitle'),
   language: document.getElementById('language'),
+  showScores: document.getElementById('showScores'),
+  showScoresLabel: document.getElementById('showScoresLabel'),
   letters: document.getElementById('letters'),
   mask: document.getElementById('mask'),
+  lengthFiltersPanel: document.getElementById('lengthFiltersPanel'),
   lengthFilters: document.getElementById('lengthFilters'),
+  emptyState: document.getElementById('emptyState'),
   results: document.getElementById('results')
 };
 
@@ -66,8 +76,15 @@ function canBuildFromLetters(word, letters) {
 
 function maskToRegExp(mask, lang) {
   if (!mask) return null;
-  const safe = normalize(mask, lang).replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/_/g, '.').replace(/\*/g, '.*');
-  return new RegExp(`^${safe}$`);
+  const normalized = normalize(mask, lang);
+  const pattern = [...normalized]
+    .map((ch) => {
+      if (ch === '_') return '.';
+      if (ch === '*') return '.*';
+      return ch.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    })
+    .join('');
+  return new RegExp(`^${pattern}$`);
 }
 
 function wordScore(word, lang) {
@@ -96,6 +113,7 @@ function updateTexts() {
   els.appTitle.textContent = t.title;
   els.settingsTitle.textContent = t.settingsTitle;
   els.languageLabel.textContent = t.languageLabel;
+  els.showScoresLabel.textContent = t.showScoresLabel;
   els.letters.placeholder = t.lettersPlaceholder;
   els.mask.placeholder = t.maskPlaceholder;
   els.settingsToggle.setAttribute('aria-label', t.openSettings);
@@ -134,6 +152,8 @@ function search() {
 }
 
 function renderLengthFilters(lengths) {
+  els.lengthFiltersPanel.classList.toggle('hidden', !lengths.length);
+
   if (!lengths.length) {
     els.lengthFilters.innerHTML = '';
     return;
@@ -152,13 +172,49 @@ function renderLengthFilters(lengths) {
 }
 
 function renderResults() {
+  const t = I18N[state.language];
   const letters = normalize(state.letters, state.language).replace(/[_*]/g, '');
   if (!letters) {
     els.results.innerHTML = '';
+    els.emptyState.textContent = t.emptyHint;
+    els.emptyState.classList.remove('hidden');
     return;
   }
 
-  els.results.innerHTML = state.results.slice(0, 300).map((entry) => `<li class="result-item">${entry.word}</li>`).join('');
+  if (!state.results.length) {
+    els.results.innerHTML = '';
+    els.emptyState.textContent = t.noResults;
+    els.emptyState.classList.remove('hidden');
+    return;
+  }
+
+  els.emptyState.classList.add('hidden');
+
+  els.results.innerHTML = state.results
+    .slice(0, 300)
+    .map((entry, index) => {
+      const score = els.showScores.checked ? `<sup class="result-score">${entry.score}</sup>` : '';
+      return `<li class="result-item" data-index="${index}">
+        <button class="result-toggle" type="button" aria-expanded="false">
+          <span class="result-main">
+            <span class="result-word">${entry.word}</span>${score}
+          </span>
+        </button>
+        <div class="result-details hidden">
+          <p>${entry.definition}</p>
+        </div>
+      </li>`;
+    })
+    .join('');
+
+  els.results.querySelectorAll('.result-toggle').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const details = btn.parentElement.querySelector('.result-details');
+      const expanded = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+      details.classList.toggle('hidden', expanded);
+    });
+  });
 }
 
 function openSettingsDrawer() {
@@ -187,6 +243,10 @@ els.language.addEventListener('change', (e) => {
   state.lengthFilter = null;
   updateTexts();
   search();
+});
+els.showScores.addEventListener('change', (e) => {
+  state.showScores = e.target.checked;
+  renderResults();
 });
 els.letters.addEventListener('input', (e) => {
   state.letters = e.target.value;

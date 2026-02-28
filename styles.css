@@ -95,8 +95,23 @@ body {
 }
 
 .panel { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 0.85rem; margin-bottom: 0.75rem; }
+.input-panel { margin-bottom: 0.75rem; }
 .row { display: grid; gap: 0.45rem; margin-bottom: 0.7rem; }
+.row:last-child { margin-bottom: 0; }
+.row--compact { margin-top: 0.3rem; }
 label { font-weight: 600; }
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-weight: 500;
+}
+.checkbox input {
+  width: 1.05rem;
+  height: 1.05rem;
+  margin: 0;
+}
+
 input, select, button { border: 1px solid var(--border); border-radius: 8px; padding: 0.62rem 0.72rem; background: transparent; color: var(--text); }
 input, select { font-size: 16px; }
 button { cursor: pointer; touch-action: manipulation; }
@@ -111,26 +126,48 @@ button { cursor: pointer; touch-action: manipulation; }
 }
 .length-btn { border-radius: 999px; min-width: 2.1rem; height: 2.1rem; padding: 0 0.5rem; flex: 0 0 auto; }
 .length-btn.active { background: var(--accent); border-color: var(--accent); color: var(--accent-contrast); }
+.length-filters-panel { margin-bottom: 0.75rem; }
 
 .results-panel { margin-top: 0.2rem; }
+.empty-state {
+  padding: 0.9rem;
+  border-radius: 12px;
+  background: var(--panel);
+  border: 1px dashed var(--border);
+  color: var(--muted);
+  line-height: 1.4;
+}
+
 .results { list-style: none; padding: 0; margin: 0; }
-.result-item {
+.result-item { border-bottom: 1px solid var(--border); }
+.result-item:last-child { border-bottom: none; }
+
+.result-toggle {
+  width: 100%;
+  border: 0;
+  border-radius: 0;
+  padding: 0.78rem 0.12rem;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 0.78rem 0.12rem;
+  justify-content: flex-start;
+  gap: 0.6rem;
   font-size: 1rem;
-  border-bottom: 1px solid var(--border);
+  text-align: left;
 }
-.result-item::after {
-  content: '';
-  width: 0.48rem;
-  height: 0.48rem;
-  border-top: 2px solid var(--muted);
-  border-right: 2px solid var(--muted);
-  transform: rotate(45deg);
-  margin-left: 0.65rem;
-  opacity: 0.8;
+
+.result-main { display: inline-flex; align-items: baseline; gap: 0.2rem; }
+.result-word { font-weight: 600; }
+.result-score {
+  color: var(--muted);
+  font-size: 0.72em;
+  line-height: 1;
 }
-.result-item:last-child { border-bottom: none; }
+
+.result-details {
+  padding: 0 0.12rem 0.8rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+.result-details p { margin: 0.2rem 0; }
+
 .hidden { display: none; }
