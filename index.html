@@ -43,11 +43,17 @@
 
       <section class="input-panel">
         <div class="row">
-          <input id="letters" type="text" placeholder="ваши буквы" autocomplete="off" />
+          <input id="letters" type="text" placeholder="Ваши буквы" autocomplete="off" />
         </div>
 
-        <div class="row">
-          <input id="mask" type="text" placeholder="маска (_ и *)" autocomplete="off" />
+        <div class="row row--mask">
+          <div class="mask-input-wrap">
+            <input id="mask" type="text" placeholder="Маска слова — буквы, знаки _ и *" autocomplete="off" />
+            <p class="mask-hint" aria-hidden="true">
+              <span>_ одна любая буква</span>
+              <span>* несколько букв</span>
+            </p>
+          </div>
         </div>
       </section>
 
