@@ -12,6 +12,8 @@ const I18N = {
     closeSettings: 'Закрыть настройки',
     lettersPlaceholder: 'Ваши буквы',
     maskPlaceholder: 'Маска слова — буквы, знаки _ и *',
+    maskHintSingle: '_ одна любая буква',
+    maskHintMultiple: '* несколько букв',
     showScoresLabel: 'Показывать очки у слова',
     emptyHint: 'Введите буквы и (при желании) маску, чтобы получить список слов.',
     noResults: 'По этим буквам и маске слов не найдено. Попробуйте изменить запрос.',
@@ -26,6 +28,8 @@ const I18N = {
     closeSettings: 'Close settings',
     lettersPlaceholder: 'your letters',
     maskPlaceholder: 'mask (_ and *)',
+    maskHintSingle: '_ any single letter',
+    maskHintMultiple: '* multiple letters',
     showScoresLabel: 'Show word score',
     emptyHint: 'Enter letters and an optional mask to see matching words.',
     noResults: 'No words were found for this set of letters and mask. Try another query.',
@@ -49,6 +53,8 @@ const els = {
   showScoresLabel: document.getElementById('showScoresLabel'),
   letters: document.getElementById('letters'),
   mask: document.getElementById('mask'),
+  maskHintSingle: document.getElementById('maskHintSingle'),
+  maskHintMultiple: document.getElementById('maskHintMultiple'),
   lengthFiltersPanel: document.getElementById('lengthFiltersPanel'),
   lengthFilters: document.getElementById('lengthFilters'),
   emptyState: document.getElementById('emptyState'),
@@ -116,6 +122,8 @@ function updateTexts() {
   els.showScoresLabel.textContent = t.showScoresLabel;
   els.letters.placeholder = t.lettersPlaceholder;
   els.mask.placeholder = t.maskPlaceholder;
+  els.maskHintSingle.textContent = t.maskHintSingle;
+  els.maskHintMultiple.textContent = t.maskHintMultiple;
   els.settingsToggle.setAttribute('aria-label', t.openSettings);
   els.settingsClose.setAttribute('aria-label', t.closeSettings);
   renderResults();
