@@ -12,7 +12,7 @@
     <aside id="settingsDrawer" class="drawer" aria-hidden="true">
       <div class="drawer__header">
         <h2 id="settingsTitle">Настройки</h2>
-        <button id="settingsClose" class="drawer__close" type="button" aria-label="Закрыть настройки">✕</button>
+        <button id="settingsClose" class="drawer__close" type="button" aria-label="Закрыть настройки">×</button>
       </div>
       <div class="row">
         <label for="language" id="languageLabel">Язык словаря</label>
@@ -22,9 +22,12 @@
         </select>
       </div>
       <div class="row row--compact">
-        <label class="checkbox" for="showScores">
-          <input id="showScores" type="checkbox" checked />
+        <label class="switch-row" for="showScores">
           <span id="showScoresLabel">Показывать очки у слова</span>
+          <span class="switch">
+            <input id="showScores" type="checkbox" checked />
+            <span class="switch__track" aria-hidden="true"></span>
+          </span>
         </label>
       </div>
     </aside>
