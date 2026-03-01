@@ -10,6 +10,8 @@ const I18N = {
     languageLabel: 'Язык словаря',
     openSettings: 'Открыть настройки',
     closeSettings: 'Закрыть настройки',
+    lettersLabel: 'Ваши буквы',
+    maskLabel: 'Маска слова — буквы, знаки _ и *',
     lettersPlaceholder: 'ваши буквы',
     maskPlaceholder: 'маска (_ и *)',
     showScoresLabel: 'Показывать очки у слова',
@@ -24,6 +26,8 @@ const I18N = {
     languageLabel: 'Dictionary language',
     openSettings: 'Open settings',
     closeSettings: 'Close settings',
+    lettersLabel: 'Your letters',
+    maskLabel: 'Word mask — letters, _ and * symbols',
     lettersPlaceholder: 'your letters',
     maskPlaceholder: 'mask (_ and *)',
     showScoresLabel: 'Show word score',
@@ -47,6 +51,8 @@ const els = {
   language: document.getElementById('language'),
   showScores: document.getElementById('showScores'),
   showScoresLabel: document.getElementById('showScoresLabel'),
+  lettersLabel: document.getElementById('lettersLabel'),
+  maskLabel: document.getElementById('maskLabel'),
   letters: document.getElementById('letters'),
   mask: document.getElementById('mask'),
   lengthFiltersPanel: document.getElementById('lengthFiltersPanel'),
@@ -114,6 +120,8 @@ function updateTexts() {
   els.settingsTitle.textContent = t.settingsTitle;
   els.languageLabel.textContent = t.languageLabel;
   els.showScoresLabel.textContent = t.showScoresLabel;
+  els.lettersLabel.textContent = t.lettersLabel;
+  els.maskLabel.textContent = t.maskLabel;
   els.letters.placeholder = t.lettersPlaceholder;
   els.mask.placeholder = t.maskPlaceholder;
   els.settingsToggle.setAttribute('aria-label', t.openSettings);
