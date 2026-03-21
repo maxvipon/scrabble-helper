@@ -17,8 +17,8 @@ const I18N = {
     showScoresLabel: 'Показывать очки у слова',
     emptyHint: 'Введите буквы и (при желании) маску, чтобы получить список слов.',
     noResults: 'По этим буквам и маске слов не найдено. Попробуйте изменить запрос.',
-    definitionRu: 'Определение: открытый русский словарь (wordlist-формат).',
-    definitionEn: 'Definition: open English dictionary (wordlist format).'
+    definitionRu: 'Определение недоступно в этом словаре.',
+    definitionEn: 'Definition is unavailable in this dictionary.'
   },
   en: {
     title: 'scrabble helper',
@@ -33,8 +33,8 @@ const I18N = {
     showScoresLabel: 'Show word score',
     emptyHint: 'Enter letters and an optional mask to see matching words.',
     noResults: 'No words were found for this set of letters and mask. Try another query.',
-    definitionRu: 'Определение: открытый русский словарь (wordlist-формат).',
-    definitionEn: 'Definition: open English dictionary (wordlist format).'
+    definitionRu: 'Определение недоступно в этом словаре.',
+    definitionEn: 'Definition is unavailable in this dictionary.'
   }
 };
 
@@ -98,19 +98,35 @@ function wordScore(word, lang) {
   return [...word].reduce((sum, ch) => sum + (table[ch] || 0), 0);
 }
 
-function parseWordList(text, lang) {
+function parseDictionary(text, lang, fallbackDefinition) {
   const pattern = lang === 'ru' ? /^[а-яё]{2,}$/ : /^[a-z]{2,}$/;
+
   return text
     .split('\n')
-    .map((w) => normalize(w, lang))
-    .filter((w) => pattern.test(w));
+    .map((line) => {
+      const trimmed = line.trim();
+      if (!trimmed) return null;
+
+      if (lang === 'en' && trimmed.includes('\t')) {
+        const [rawWord, ...definitionParts] = trimmed.split('\t');
+        const word = normalize(rawWord, lang);
+        const definition = definitionParts.join('\t').trim();
+        if (!pattern.test(word)) return null;
+        return { word, definition: definition || fallbackDefinition };
+      }
+
+      const word = normalize(trimmed, lang);
+      if (!pattern.test(word)) return null;
+      return { word, definition: fallbackDefinition };
+    })
+    .filter(Boolean);
 }
 
 async function loadDictionaries() {
   const [ruRes, enRes] = await Promise.all([fetch('data/ru-open.txt'), fetch('data/en-open.txt')]);
   const [ruText, enText] = await Promise.all([ruRes.text(), enRes.text()]);
-  state.dictionary.ru = parseWordList(ruText, 'ru').map((word) => ({ word, definition: I18N.ru.definitionRu }));
-  state.dictionary.en = parseWordList(enText, 'en').map((word) => ({ word, definition: I18N.en.definitionEn }));
+  state.dictionary.ru = parseDictionary(ruText, 'ru', I18N.ru.definitionRu);
+  state.dictionary.en = parseDictionary(enText, 'en', I18N.en.definitionEn);
 }
 
 function updateTexts() {
@@ -179,6 +195,15 @@ function renderLengthFilters(lengths) {
   });
 }
 
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;');
+}
+
 function renderResults() {
   const t = I18N[state.language];
   const letters = normalize(state.letters, state.language).replace(/[_*]/g, '');
@@ -205,11 +230,11 @@ function renderResults() {
       return `<li class="result-item" data-index="${index}">
         <button class="result-toggle" type="button" aria-expanded="false">
           <span class="result-main">
-            <span class="result-word">${entry.word}</span>${score}
+            <span class="result-word">${escapeHtml(entry.word)}</span>${score}
           </span>
         </button>
         <div class="result-details hidden">
-          <p>${entry.definition}</p>
+          <p>${escapeHtml(entry.definition)}</p>
         </div>
       </li>`;
     })
